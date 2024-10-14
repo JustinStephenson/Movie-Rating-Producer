@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class ErrorDTO {
+public class ErrorDTO implements ResponseDTO {
 
     private final String timestamp;
     private final int status;

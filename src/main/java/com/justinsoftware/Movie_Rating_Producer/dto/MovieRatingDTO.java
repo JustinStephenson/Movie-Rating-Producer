@@ -4,15 +4,20 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-public record MovieRatingDTO(
+@RequiredArgsConstructor
+@Getter
+public class MovieRatingDTO implements ResponseDTO {
         @NotBlank
-        String movieName,
+        private final String movieName;
+
         @Min(value = 0, message = "Rating must be greater than 0")
         @Max(value = 5, message = "Rating must be less than 5")
         @NotNull
-        Integer rating,
+        private final Integer rating;
+
         @NotBlank
-        String message
-) {
+        private final String message;
 }
