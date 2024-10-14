@@ -29,7 +29,6 @@ public class MovieRatingController {
 
     private final Messaging messaging;
     private final ObjectMapper objectMapper;
-    private final KafkaConfig kafkaConfig;
 
     @PostMapping("/")
     public ResponseEntity<ResponseDTO> createMovieRating(@Valid @RequestBody MovieRatingDTO movieRatingDTO) {
