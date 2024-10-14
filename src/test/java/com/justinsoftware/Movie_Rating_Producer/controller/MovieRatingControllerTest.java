@@ -29,17 +29,19 @@ class MovieRatingControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private String baseUrl;
     private MovieRatingDTO baseMovieRatingDTO;
 
     @BeforeEach
     void setUp() {
+        baseUrl = "/api/v1/movie/rating/";
         baseMovieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
     }
 
     @Test
     void testCreateMovieRating() throws Exception {
         // When
-        ResultActions response = mockMvc.perform(post("/api/v1/movie/rating/")
+        ResultActions response = mockMvc.perform(post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(baseMovieRatingDTO)));
 
@@ -50,7 +52,7 @@ class MovieRatingControllerTest {
     @Test
     void testUpdateMovieRating() throws Exception {
         // When
-        ResultActions response = mockMvc.perform(put("/api/v1/movie/rating/")
+        ResultActions response = mockMvc.perform(put(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(baseMovieRatingDTO)));
 
@@ -65,7 +67,7 @@ class MovieRatingControllerTest {
         MovieRatingDTO movieRatingDTO = new MovieRatingDTO(movieName, rating, message);
 
         // When
-        ResultActions response = mockMvc.perform(post("/api/v1/movie/rating/")
+        ResultActions response = mockMvc.perform(post(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(movieRatingDTO)));
 
