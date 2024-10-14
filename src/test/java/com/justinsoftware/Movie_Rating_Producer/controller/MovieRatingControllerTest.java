@@ -2,6 +2,7 @@ package com.justinsoftware.Movie_Rating_Producer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justinsoftware.Movie_Rating_Producer.dto.MovieRatingDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,17 +29,19 @@ class MovieRatingControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private MovieRatingDTO movieRatingDTO;
+    private MovieRatingDTO baseMovieRatingDTO;
+
+    @BeforeEach
+    void setUp() {
+        baseMovieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
+    }
 
     @Test
     void testCreateMovieRating() throws Exception {
-        // Given
-        movieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
-
         // When
         ResultActions response = mockMvc.perform(post("/api/v1/movie/rating/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(movieRatingDTO)));
+                .content(objectMapper.writeValueAsString(baseMovieRatingDTO)));
 
         // Then
         response.andExpect(status().isCreated());
@@ -46,13 +49,10 @@ class MovieRatingControllerTest {
 
     @Test
     void testUpdateMovieRating() throws Exception {
-        // Given
-        movieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
-
         // When
         ResultActions response = mockMvc.perform(put("/api/v1/movie/rating/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(movieRatingDTO)));
+                .content(objectMapper.writeValueAsString(baseMovieRatingDTO)));
 
         // Then
         response.andExpect(status().isOk());
@@ -62,7 +62,7 @@ class MovieRatingControllerTest {
     @MethodSource("createMovieRatingValidationErrorArguments")
     void createMovieRatingValidationError(String movieName, Integer rating, String message) throws Exception {
         // Given
-        movieRatingDTO = new MovieRatingDTO(movieName, rating, message);
+        MovieRatingDTO movieRatingDTO = new MovieRatingDTO(movieName, rating, message);
 
         // When
         ResultActions response = mockMvc.perform(post("/api/v1/movie/rating/")
