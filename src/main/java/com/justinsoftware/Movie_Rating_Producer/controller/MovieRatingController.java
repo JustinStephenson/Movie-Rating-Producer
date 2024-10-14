@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justinsoftware.Movie_Rating_Producer.dto.ErrorDTO;
 import com.justinsoftware.Movie_Rating_Producer.dto.MovieRatingDTO;
 import com.justinsoftware.Movie_Rating_Producer.dto.ResponseDTO;
-import com.justinsoftware.Movie_Rating_Producer.event.KafkaConfig;
 import com.justinsoftware.Movie_Rating_Producer.event.Messaging;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
