@@ -35,8 +35,7 @@ public class MovieRatingController {
             messaging.sendMessage(CREATE_MOVIE_TOPIC, objectMapper.writeValueAsString(movieRatingDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(movieRatingDTO);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-            return handleJsonProcessingException();
+            return handleJsonProcessingException(e);
         }
     }
 
@@ -46,8 +45,7 @@ public class MovieRatingController {
             messaging.sendMessage(UPDATE_MOVIE_TOPIC, objectMapper.writeValueAsString(movieRatingDTO));
             return ResponseEntity.status(HttpStatus.OK).body(movieRatingDTO);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-            return handleJsonProcessingException();
+            return handleJsonProcessingException(e);
         }
     }
 
@@ -65,7 +63,9 @@ public class MovieRatingController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
-    private ResponseEntity<ResponseDTO> handleJsonProcessingException() {
+    private ResponseEntity<ResponseDTO> handleJsonProcessingException(JsonProcessingException e) {
+        log.error(e.getMessage());
+
         ErrorDTO errorDTO = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, "Json Processing Error", new HashMap<>());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDTO);
     }
