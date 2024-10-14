@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -30,7 +31,7 @@ class MovieRatingControllerTest {
     private MovieRatingDTO movieRatingDTO;
 
     @Test
-    void createMovieRating() throws Exception {
+    void testCreateMovieRating() throws Exception {
         // Given
         movieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
 
@@ -43,6 +44,20 @@ class MovieRatingControllerTest {
         response.andExpect(status().isCreated());
     }
 
+    @Test
+    void testUpdateMovieRating() throws Exception {
+        // Given
+        movieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
+
+        // When
+        ResultActions response = mockMvc.perform(put("/api/v1/movie/rating/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(movieRatingDTO)));
+
+        // Then
+        response.andExpect(status().isOk());
+    }
+
     @ParameterizedTest
     @MethodSource("createMovieRatingValidationErrorArguments")
     void createMovieRatingValidationError(String movieName, Integer rating, String message) throws Exception {
@@ -51,8 +66,8 @@ class MovieRatingControllerTest {
 
         // When
         ResultActions response = mockMvc.perform(post("/api/v1/movie/rating/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(movieRatingDTO)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(movieRatingDTO)));
 
         // Then
         response.andExpect(status().isBadRequest());
