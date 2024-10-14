@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justinsoftware.Movie_Rating_Producer.dto.ErrorDTO;
 import com.justinsoftware.Movie_Rating_Producer.dto.MovieRatingDTO;
 import com.justinsoftware.Movie_Rating_Producer.dto.ResponseDTO;
+import com.justinsoftware.Movie_Rating_Producer.event.KafkaConfig;
 import com.justinsoftware.Movie_Rating_Producer.event.Messaging;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.justinsoftware.Movie_Rating_Producer.event.KafkaConfig.*;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -26,12 +29,24 @@ public class MovieRatingController {
 
     private final Messaging messaging;
     private final ObjectMapper objectMapper;
+    private final KafkaConfig kafkaConfig;
 
     @PostMapping("/")
     public ResponseEntity<ResponseDTO> createMovieRating(@Valid @RequestBody MovieRatingDTO movieRatingDTO) {
         try {
-            messaging.sendMessage("movieRatingProducer-json-createMovieRating", objectMapper.writeValueAsString(movieRatingDTO));
+            messaging.sendMessage(CREATE_MOVIE_TOPIC, objectMapper.writeValueAsString(movieRatingDTO));
             return ResponseEntity.status(HttpStatus.CREATED).body(movieRatingDTO);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+            return handleJsonProcessingException();
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<ResponseDTO> updateMovieRating(@Valid @RequestBody MovieRatingDTO movieRatingDTO) {
+        try {
+            messaging.sendMessage(UPDATE_MOVIE_TOPIC, objectMapper.writeValueAsString(movieRatingDTO));
+            return ResponseEntity.status(HttpStatus.OK).body(movieRatingDTO);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
             return handleJsonProcessingException();
