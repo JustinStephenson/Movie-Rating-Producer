@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: '3'
 services:
 
   # The kafka broker that will produce and consume messages
@@ -37,8 +37,12 @@ services:
     restart: always
     # set shared memory limit when using docker-compose
     shm_size: 128mb
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     environment:
+      POSTGRES_DB: movies
       POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
     ports:
       - 5432:5432
 
@@ -49,3 +53,23 @@ services:
     restart: always
     ports:
       - 8083:8080
+
+  liquibase:
+    image: liquibase
+    container_name: liquibase
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ../liquibase/changelog/changelog-master.xml
+        target: /liquibase/changelog/changelog-master.xml
+      - type: bind
+        source: ../liquibase/changelog/release-1.x.x
+        target: /liquibase/changelog/release-1.x.x
+    command:
+      --url=jdbc:postgresql://db:5432/movies
+      --username=postgres
+      --password=postgres
+      --changeLogFile=/changelog/changelog-master.xml
+      update

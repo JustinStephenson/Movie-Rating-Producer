@@ -30,3 +30,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Postgres local data ###
+/docker/pgdata/
