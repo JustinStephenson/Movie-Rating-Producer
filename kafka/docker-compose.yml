@@ -2,6 +2,7 @@
 version: '2'
 services:
 
+  # The kafka broker that will produce and consume messages
   broker:
     image: confluentinc/cp-kafka:latest
     hostname: broker
@@ -28,3 +29,21 @@ services:
       # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid" 
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+
+  # Postgresql database
+  db:
+    image: postgres
+    container_name: postgres
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  # Lets us view the db in url
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8083:8080
