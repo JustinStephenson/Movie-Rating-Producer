@@ -39,6 +39,8 @@ services:
     shm_size: 128mb
     environment:
       POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
 
   # Lets us view the db in url
   adminer:
