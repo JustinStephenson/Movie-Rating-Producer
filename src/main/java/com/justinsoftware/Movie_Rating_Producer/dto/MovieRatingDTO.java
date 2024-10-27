@@ -10,14 +10,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class MovieRatingDTO implements ResponseDTO {
-        @NotBlank
-        private final String movieName;
+    @NotNull
+    private final long userId;
 
-        @Min(value = 0, message = "Rating must be greater than 0")
-        @Max(value = 5, message = "Rating must be less than 5")
-        @NotNull
-        private final Integer rating;
+    @NotBlank
+    private final String movieName;
 
-        @NotBlank
-        private final String message;
+    @Min(value = 0, message = "Rating must be greater than 0")
+    @Max(value = 5, message = "Rating must be less than 5")
+    @NotNull
+    private final Integer rating;
+
+    @NotBlank
+    private final String message;
 }
