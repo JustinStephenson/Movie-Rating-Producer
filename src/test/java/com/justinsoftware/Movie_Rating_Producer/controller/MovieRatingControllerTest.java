@@ -2,6 +2,7 @@ package com.justinsoftware.Movie_Rating_Producer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justinsoftware.Movie_Rating_Producer.dto.MovieRatingDTO;
+import com.justinsoftware.Movie_Rating_Producer.util.BaseTestContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-class MovieRatingControllerTest {
+class MovieRatingControllerTest extends BaseTestContainer {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -35,7 +36,7 @@ class MovieRatingControllerTest {
     @BeforeEach
     void setUp() {
         baseUrl = "/api/v1/movie/rating/";
-        baseMovieRatingDTO = new MovieRatingDTO("Test Movie", 3, "Great movie");
+        baseMovieRatingDTO = new MovieRatingDTO(123L, "Test Movie", 3, "Great movie");
     }
 
     @Test
@@ -62,9 +63,9 @@ class MovieRatingControllerTest {
 
     @ParameterizedTest
     @MethodSource("createMovieRatingValidationErrorArguments")
-    void createMovieRatingValidationError(String movieName, Integer rating, String message) throws Exception {
+    void createMovieRatingValidationError(Long userId, String movieName, Integer rating, String message) throws Exception {
         // Given
-        MovieRatingDTO movieRatingDTO = new MovieRatingDTO(movieName, rating, message);
+        MovieRatingDTO movieRatingDTO = new MovieRatingDTO(userId, movieName, rating, message);
 
         // When
         ResultActions response = mockMvc.perform(post(baseUrl)
@@ -77,13 +78,14 @@ class MovieRatingControllerTest {
 
     private static Stream<Arguments> createMovieRatingValidationErrorArguments() {
         return Stream.of(
-                Arguments.of("", 4, "Movie was good!"),
-                Arguments.of(null, 4, "Movie was good!"),
-                Arguments.of("Test Movie", -1, "Movie was good!"),
-                Arguments.of("Test Movie", 6, "Movie was good!"),
-                Arguments.of("Test Movie", null, "Movie was good!"),
-                Arguments.of("Test Movie", 4, ""),
-                Arguments.of("Test Movie", 4, null)
+                Arguments.of(null, "Test Movie", 4, "Movie was good!"),
+                Arguments.of(123L, "", 4, "Movie was good!"),
+                Arguments.of(123L, null, 4, "Movie was good!"),
+                Arguments.of(123L, "Test Movie", -1, "Movie was good!"),
+                Arguments.of(123L, "Test Movie", 6, "Movie was good!"),
+                Arguments.of(123L, "Test Movie", null, "Movie was good!"),
+                Arguments.of(123L, "Test Movie", 4, ""),
+                Arguments.of(123L, "Test Movie", 4, null)
         );
     }
 }

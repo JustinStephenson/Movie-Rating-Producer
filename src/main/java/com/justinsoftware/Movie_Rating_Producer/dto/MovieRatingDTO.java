@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class MovieRatingDTO implements ResponseDTO {
     @NotNull
-    private final long userId;
+    private final Long userId;
 
     @NotBlank
     private final String movieName;
