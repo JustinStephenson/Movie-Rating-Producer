@@ -1,9 +1,9 @@
 package com.justinsoftware.Movie_Rating_Producer.util;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.kafka.ConfluentKafkaContainer;
+import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.utility.DockerImageName;
 
 public class BaseTestContainer {
@@ -17,9 +17,8 @@ public class BaseTestContainer {
         registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
     }
 
-    @BeforeAll
-    static void beforeAll() {
-        kafka.start();
+    static {
+        Startables.deepStart(kafka).join();
     }
 
 }
